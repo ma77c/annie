@@ -21,6 +21,9 @@ Thumbs.db
 !*.tfvars.example
 .terraform.lock.hcl
 
+# K3s kubeconfig (contains cluster credentials)
+annie-k3s.yaml
+
 # Logs
 *.log
 logs/

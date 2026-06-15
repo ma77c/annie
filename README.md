@@ -40,6 +40,51 @@ Ollama will be available at `http://localhost:11434`.
 docker exec annie-ollama ollama pull qwen2.5-coder:7b
 ```
 
+---
+
+## Deploy to a remote machine (K3s)
+
+Deploy Ollama to another machine on your LAN using lightweight Kubernetes.
+
+### Requirements
+
+- A Ubuntu machine on your LAN with SSH access
+- [kubectl](https://kubernetes.io/docs/tasks/tools/) installed locally
+
+### 1. Set up K3s on the remote machine
+
+```bash
+./k3s/setup-k3s.sh user@192.168.1.50
+```
+
+This installs K3s on the remote machine and copies the kubeconfig to `~/.kube/annie-k3s.yaml`.
+
+### 2. Deploy Ollama
+
+```bash
+./k3s/deploy.sh
+```
+
+### 3. Access Ollama
+
+Ollama is available at `http://<remote-ip>:31434` from any device on your LAN.
+
+Pull a model:
+
+```bash
+curl http://<remote-ip>:31434/api/pull -d '{"name":"qwen2.5-coder:7b"}'
+```
+
+### GPU Support
+
+To set up with NVIDIA GPU acceleration:
+
+```bash
+./k3s/setup-k3s.sh user@192.168.1.50 --gpu
+```
+
+This installs the NVIDIA driver (570+), container toolkit, and device plugin automatically. Requires a GPU with compute capability 6.0+ and Ubuntu.
+
 ### Use with OpenCode
 
 Add this to your `~/.config/opencode/opencode.json`:
@@ -82,6 +127,7 @@ Then run `/models` inside OpenCode to select your model.
 ## Roadmap
 
 - [x] Local Docker + Ollama setup
+- [x] LAN deployment via K3s
 - [ ] GPU support (NVIDIA)
 - [ ] AWS EC2 deployment
 - [ ] AWS ECS deployment
